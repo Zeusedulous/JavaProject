@@ -1,4 +1,4 @@
-package com.zsl.cn.statics;
+package com.zsl.cn.jdk;
 
 /**
  * @Author : Zeusedulous

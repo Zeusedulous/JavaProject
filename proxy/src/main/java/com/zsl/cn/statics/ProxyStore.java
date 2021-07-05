@@ -5,7 +5,7 @@ package com.zsl.cn.statics;
  * @Date : 2021/6/29 9:16
  * @Desc : 代理商
  */
-public class ProxyStore implements MaskInterface{
+public class ProxyStore implements Mask {
 
     private Store store;
 

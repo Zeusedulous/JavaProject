@@ -9,7 +9,7 @@ public class Test {
 
     public static void main(String[] args) {
         Store store = new Store();
-        MaskInterface maskInterface = new ProxyStore(store);
+        Mask maskInterface = new ProxyStore(store);
         maskInterface.sell();
     }
 }
