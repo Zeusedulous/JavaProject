@@ -36,7 +36,7 @@ public class Singleton1 {
             synchronized (Singleton1.class){
                 /**
                  * 7.需要双重判断，如果线程1，线程2都进入synchronized上面那一步，这时候线程1进入synchronized
-                 *   判断不为null就要new一下，然后结束，这时候线程2也进来，也会new一下，所以需要再次判断是否为null
+                 *   就要new一下，然后结束，这时候线程2也进来，也会new一下，所以需要再次判断是否为null
                  */
                 if(null == singleton1){
                     singleton1 = new Singleton1();
