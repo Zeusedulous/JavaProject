@@ -12,6 +12,7 @@
         <module>proxy</module>
         <module>Jackson</module>
         <module>singleton</module>
+        <module>test</module>
     </modules>
 
     <properties>
