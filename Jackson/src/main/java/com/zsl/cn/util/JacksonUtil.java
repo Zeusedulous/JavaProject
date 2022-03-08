@@ -2,12 +2,15 @@ package com.zsl.cn.util;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,7 @@ public class JacksonUtil {
     public interface JacksonFilter {
     }
 
-    private final static ObjectMapper mapper = initMapper();
+    public final static ObjectMapper mapper = initMapper();
 
     private static ObjectMapper initMapper() {
         ObjectMapper initMapper = new ObjectMapper();
@@ -39,8 +42,23 @@ public class JacksonUtil {
         // 忽略空bean转json错误
         initMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
+        // 忽略所有引号
+        initMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+
+        // 忽略单引号
+        initMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+
         // 序列化忽略空值属性
         initMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        //大小写脱敏
+        initMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+
+        //允许出现特殊字符和转义符
+//        initMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true) ;
+
+//        initMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+
         return initMapper;
     }
 
@@ -186,7 +204,7 @@ public class JacksonUtil {
      * @param obj 带转换对象
      * @return json串 得到filterKey之外的属性
      */
-    public static String obj2JsonStrFilter(Object obj, @NonNull String... filterKey) throws Exception {
+    public static String obj2JsonStrFilter(Object obj,  String... filterKey) throws Exception {
         ObjectMapper filterMapper = getFilterMapper(filterKey);
         return filterMapper.writeValueAsString(obj);
     }
@@ -198,7 +216,7 @@ public class JacksonUtil {
      * @param obj 带转换对象
      * @return json串 得到filterKey中的属性
      */
-    public static String obj2JsonStrOutFilter(Object obj, @NonNull String... filterKey) throws Exception {
+    public static String obj2JsonStrOutFilter(Object obj,  String... filterKey) throws Exception {
         ObjectMapper filterMapper = getOutFilterMapper(filterKey);
         return filterMapper.writeValueAsString(obj);
     }
@@ -262,5 +280,23 @@ public class JacksonUtil {
         //添加动态json属性注解
         filterMapper.addMixIn(Object.class, JacksonFilter.class);
         return filterMapper;
+    }
+
+    /**
+     * new 一个ObjectNode
+     *
+     * @return ObjectNode对象
+     */
+    public static ObjectNode newObjectNode() {
+        return mapper.createObjectNode();
+    }
+
+    /**
+     * new 一个ArrayNode
+     *
+     * @return ArrayNode对象
+     */
+    public static ArrayNode newArrayNode() {
+        return mapper.createArrayNode();
     }
 }
